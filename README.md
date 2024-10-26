@@ -4,29 +4,29 @@
 ### 1.1 - Descrição
 
 #### Definições
-• Uma linguagem imperativa com a sintaxe parecida com a linguagem C
-• Um programa XYZ é uma sequência de definições de funções sem recursividade e sem variáveis globais
-• A função principal, por onde é iniciada a execução das instruções, chama-se main, retorna um valor e não possui parâmetros
-• Só há dois tipos de dados na linguagem, o tipo inteiro de 64 bits (i64) e o tipo ponto flutuante de 64 bits (f64). Na avaliação Booleana o 0 é falso e qualquer número diferente de 0 corresponde ao Booleano verdadeiro
-• Espaço em branco ‘ ’, tabulação ‘\t’, retorno de “carro” ‘\r’ e nova linha ‘\n’ devem ser ignorados
+• Uma linguagem imperativa com a sintaxe parecida com a linguagem C <br>
+• Um programa XYZ é uma sequência de definições de funções sem recursividade e sem variáveis globais <br>
+• A função principal, por onde é iniciada a execução das instruções, chama-se main, retorna um valor e não possui parâmetros <br>
+• Só há dois tipos de dados na linguagem, o tipo inteiro de 64 bits (i64) e o tipo ponto flutuante de 64 bits (f64). Na avaliação Booleana o 0 é falso e qualquer número diferente de 0 corresponde ao Booleano verdadeiro <br>
+• Espaço em branco ‘ ’, tabulação ‘\t’, retorno de “carro” ‘\r’ e nova linha ‘\n’ devem ser ignorados <br>
 
 #### Restrições 
 
-A linguagem é bem restrita, não havendo vetores, ponteiros emódulos. 
+A linguagem é bem restrita, não havendo vetores, ponteiros emódulos.  <br>
 Todo o programa é definido em um único arquivo.
 
 #### Comentários 
 
-Todos os comentários devem começar com “//”.
+Todos os comentários devem começar com “//”. <br>
 
 ### 1.2 - Funções
 
 #### Sintaxe
-• Uma definição de função começa com a palavra reservada fn seguida pelo seu nome, uma lista de parâmetros separados por vírgula entre parênteses e um corpo
-• Todas as funções devem retornar um valor mesmo que este valor não seja usado diretamente. O retorno do valor é realizado usando o comando “return”
-• Os parâmetros de uma função devem ser separados por vírgula. 
+• Uma definição de função começa com a palavra reservada fn seguida pelo seu nome, uma lista de parâmetros separados por vírgula entre parênteses e um corpo <br>
+• Todas as funções devem retornar um valor mesmo que este valor não seja usado diretamente. O retorno do valor é realizado usando o comando “return” <br>
+• Os parâmetros de uma função devem ser separados por vírgula  <br>
 
-Por exemplo:
+Por exemplo: <br>
 > fn foo(a i64, b f64) { ... }.
 
 #### Proposição (statement)
@@ -54,10 +54,10 @@ Nenhuma variável pode ser declarada sem possuir um valor inicial.
 
 As seguintes espressões exitem em XYZ:
 
-• Variáveis (if a {...} ) e literais (while 1 {...});
-• Expressões binárias com os operadores: + - * / % > < >= <= == != && ||;
-• Expressões unárias com os operadores: - !;
-• Chamadas de função.
+• Variáveis (if a {...} ) e literais (while 1 {...}); <br>
+• Expressões binárias com os operadores: + - * / % > < >= <= == != && ||; <br>
+• Expressões unárias com os operadores: - !; <br>
+• Chamadas de função. <br>
 
 ### 1.3 - Exemplo
 
