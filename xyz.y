@@ -12,39 +12,92 @@ extern int yylex();
 %}
 
 %union {
+    int i;
     float f;
 }
-%token <f> NUM ID
-%token I64 F64 FN RETURN WS
-%type <f> function params operations assign expr var
+
+%token FN RETURN VAR MAIN I64 F64 IF ELSE WHILE
+
+%token <i> INT ID
+%token <f> FLOAT
+
+%left '+' '-'
+%left '*' '/'
+%right UMINUS
+
+%type <i> assign operations boolexp params
+
+%type <i> expr
+%type <f> float_expr
 
 %%
-function    :   function ';'            { printf("Resultado da funcao = %f\n", $1); exit(0); }
+function    :   function ';'            									{ printf("Resultado da funcao = %f\n", $1); exit(0); }
+            |   FN ID '(' params ')' '{' operations RETURN expr ';' '}'   	{ $$ = $9; }
             ;
 
-function    :   FN ID '(' params ')' '{' operations RETURN expr ';' '}'   { $$ = $9; }
-            ;
-
-params		:	ID I64					{}
-			|	ID F64					{}
-			|   params ',' params		{}
+main 		: FN MAIN '(' ')' '{' operations RETURN expr ';' '}' 			{ $$ = $8; }
 			;
 
-operations	:	assign operations		{}
-			|							{}
+
+
+params		: param_list
+			|
 			;
 
-assign		:	ID '=' expr ';'			{ $1 = $3; }
+param_list	:	param 
+			|   param_list ',' param 
 			;
+			
+param		:	ID ':' I64					
+			|	ID ':' F64							
+			|								
+			;
+
+
+
+operations 	: operation operations
+           	| operation
+           	;
+
+operation  	: assign
+           	| IF boolexp '{' operations '}'
+           	| IF boolexp '{' operations '}' ELSE '{' operations '}'
+           	| WHILE boolexp '{' operations '}'	
+			;
+
+
+
+assign		: 	VAR ID ':' I64 '=' expr ';'
+       		| 	VAR ID ':' F64 '=' expr ';'
+			| 	ID INC
+			| 	ID DEC
+			;
+
+
 
 expr		:	expr '-' expr			{ $$ = $1 - $3; }
 			|	expr '+' expr			{ $$ = $1 + $3; }
 			|	expr '*' expr			{ $$ = $1 * $3; }
 			|	expr '/' expr			{ $$ = $1 / $3; }
+			|	expr '%' expr			{ $$ = $1 % $3; }
 			|	'(' expr ')'			{ $$ = $2; }
-			|	NUM						{ $$ = $1; }
-			|	ID						{ $$ = $1; }
+			|	'-' expr 				{ $$ = -$2; }
+			|	INT						{ $$ = $1; }
+			|	FLOAT					{ $$ = $1; }
+			|	ID						{ $$ = $1; // TODO: Como marcar os símbolos? }
 			;
+
+boolexp 	: expr '<' expr				{ $$ = $1 <  $3 ? 0 : 1; }
+        	| expr '>' expr				{ $$ = $1 >  $3 ? 0 : 1; }
+        	| expr LE expr				{ $$ = $1 <= $3 ? 0 : 1; }
+        	| expr GE expr				{ $$ = $1 >= $3 ? 0 : 1; }
+        	| expr EQ expr				{ $$ = $1 == $3 ? 0 : 1; }
+        	| boolexp AND boolexp		{ $$ = $1 && $3 ? 0 : 1; }
+        	| boolexp OR boolexp		{ $$ = $1 || $3 ? 0 : 1; }
+        	| '!' boolexp				{ $$ = !$1 ? 0 : 1; }
+        	| '(' boolexp ')'			{ $$ = $2; }
+        	| expr						{ $$ = $1 ? 0 : 1; }
+        	;
 
 %%
 #include "xyz.yy.c"
