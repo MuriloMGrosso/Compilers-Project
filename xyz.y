@@ -84,7 +84,7 @@ expr		:	expr '-' expr			{ $$ = $1 - $3; }
 			|	'-' expr 				{ $$ = -$2; }
 			|	INT						{ $$ = $1; }
 			|	FLOAT					{ $$ = $1; }
-			|	ID						{ $$ = $1; // TODO: Como marcar os símbolos? }
+			|	ID						{ $$ = $1; /* TODO: Como marcar os símbolos? */ }
 			;
 
 boolexp 	: expr '<' expr				{ $$ = $1 <  $3 ? 0 : 1; }
