@@ -59,6 +59,7 @@ expr		:	expr '-' expr			{ $$ = $1 - $3; }
         	| 	expr LE expr			{ $$ = $1 <= $3 ? 1. : 0.; }
         	| 	expr GE expr			{ $$ = $1 >= $3 ? 1. : 0.; }
         	| 	expr EQ expr			{ $$ = $1 == $3 ? 1. : 0.; }
+			| 	expr NE expr			{ $$ = $1 != $3 ? 1. : 0.; }
         	| 	expr AND expr			{ $$ = $1 && $3 ? 1. : 0.; }
         	| 	expr OR expr			{ $$ = $1 || $3 ? 1. : 0.; }
         	| 	'!' expr				{ $$ = $2 == 0. ? 1. : 0.; }

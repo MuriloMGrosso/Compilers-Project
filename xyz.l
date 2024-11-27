@@ -42,5 +42,5 @@ f64                         { return F64;   }
 "++"                        { return INC;   }
 "--"                        { return DEC;   }
 
-[:+/\-*%(){};<>!=,]            { return yytext[0]; }
+[:+/\-*%(){};<>!=,]         { return yytext[0]; }
 %%
