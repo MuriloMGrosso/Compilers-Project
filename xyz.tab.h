@@ -56,11 +56,23 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     NUM = 258,                     /* NUM  */
     ID = 259,                      /* ID  */
-    I64 = 260,                     /* I64  */
-    F64 = 261,                     /* F64  */
-    FN = 262,                      /* FN  */
-    RETURN = 263,                  /* RETURN  */
-    WS = 264                       /* WS  */
+    FN = 260,                      /* FN  */
+    RETURN = 261,                  /* RETURN  */
+    MAIN = 262,                    /* MAIN  */
+    I64 = 263,                     /* I64  */
+    F64 = 264,                     /* F64  */
+    IF = 265,                      /* IF  */
+    ELSE = 266,                    /* ELSE  */
+    WHILE = 267,                   /* WHILE  */
+    EQ = 268,                      /* EQ  */
+    NE = 269,                      /* NE  */
+    GE = 270,                      /* GE  */
+    LE = 271,                      /* LE  */
+    AND = 272,                     /* AND  */
+    OR = 273,                      /* OR  */
+    INC = 274,                     /* INC  */
+    DEC = 275,                     /* DEC  */
+    UMINUS = 276                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -71,11 +83,23 @@ extern int yydebug;
 #define YYUNDEF 257
 #define NUM 258
 #define ID 259
-#define I64 260
-#define F64 261
-#define FN 262
-#define RETURN 263
-#define WS 264
+#define FN 260
+#define RETURN 261
+#define MAIN 262
+#define I64 263
+#define F64 264
+#define IF 265
+#define ELSE 266
+#define WHILE 267
+#define EQ 268
+#define NE 269
+#define GE 270
+#define LE 271
+#define AND 272
+#define OR 273
+#define INC 274
+#define DEC 275
+#define UMINUS 276
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -85,7 +109,7 @@ union YYSTYPE
 
     float f;
 
-#line 89 "xyz.tab.h"
+#line 113 "xyz.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
