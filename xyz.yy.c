@@ -386,12 +386,12 @@ struct yy_trans_info
 static const flex_int16_t yy_accept[64] =
     {   0,
         0,    0,   24,   23,    1,   22,   22,   23,   22,   22,
-       22,    9,   22,   22,   22,    8,    8,    8,    8,    8,
-        8,    8,    8,   23,    1,   15,   18,   20,   21,    2,
-        0,    9,   17,   14,   16,    8,    8,    8,    3,    8,
-        8,    8,    8,    8,    8,   19,    2,    9,    8,    7,
-        6,    8,    8,    8,    8,    8,    4,    8,    8,    8,
-        8,    5,    0
+       22,   13,   22,   22,   22,   12,   12,   12,   12,   12,
+       12,   12,   12,   23,    1,   15,   18,   20,   21,    2,
+        0,   13,   17,   14,   16,   12,   12,   12,    3,   12,
+        7,   12,   12,   12,   12,   19,    2,   13,   12,   11,
+       10,   12,   12,    6,   12,    8,    4,   12,   12,   12,
+        9,    5,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -833,92 +833,92 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 25 "xyz.l"
-{ return I64;   }
+#line 24 "xyz.l"
+{ return VAR;   }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 26 "xyz.l"
-{ return F64;   }
+#line 25 "xyz.l"
+{ return IF;    }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 27 "xyz.l"
-{ return ID;    }
+#line 26 "xyz.l"
+{ return ELSE;  }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 28 "xyz.l"
-{ yylval.f = atof(yytext); return NUM; }
+#line 27 "xyz.l"
+{ return WHILE; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 30 "xyz.l"
-{ return VAR;   }
+#line 29 "xyz.l"
+{ return I64;   }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 31 "xyz.l"
-{ return IF;    }
+#line 30 "xyz.l"
+{ return F64;   }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 32 "xyz.l"
-{ return ELSE;  }
+#line 31 "xyz.l"
+{ return ID;    }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 33 "xyz.l"
-{ return WHILE; }
+#line 32 "xyz.l"
+{ yylval.f = atof(yytext); return NUM; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 35 "xyz.l"
+#line 34 "xyz.l"
 { return EQ;    }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 36 "xyz.l"
+#line 35 "xyz.l"
 { return NE;    }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 37 "xyz.l"
+#line 36 "xyz.l"
 { return GE;    }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 38 "xyz.l"
+#line 37 "xyz.l"
 { return LE;    }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 39 "xyz.l"
+#line 38 "xyz.l"
 { return AND;   }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 40 "xyz.l"
+#line 39 "xyz.l"
 { return OR;    }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 42 "xyz.l"
+#line 41 "xyz.l"
 { return INC;   }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 43 "xyz.l"
+#line 42 "xyz.l"
 { return DEC;   }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 45 "xyz.l"
+#line 44 "xyz.l"
 { return yytext[0]; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 46 "xyz.l"
+#line 45 "xyz.l"
 ECHO;
 	YY_BREAK
 #line 924 "xyz.yy.c"
@@ -1938,5 +1938,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 46 "xyz.l"
+#line 45 "xyz.l"
 

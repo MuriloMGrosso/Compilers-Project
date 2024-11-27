@@ -40,13 +40,13 @@ operations	:	assign operations		{}
 			|							{}
 			;
 
+statement   :    IF expr '{' operations '}' ELSE '{' operations '}'    { $$ = $2 ? $4 : $8; }
+            |    IF expr '{' operations '}'                            { $$ = $2 ? $4 :  0; }
+            ;
+
 assign		:	ID '=' expr ';'				{ $1 = $3; }
 			| 	VAR ID ':' I64 '=' expr ';'	{ $2 = $6; }
 			| 	VAR ID ':' F64 '=' expr ';'	{ $2 = $6; }
-			;
-
-statement	:	IF '(' expr ')' '{' operations '}' ELSE '{' operations '}'	{ $$ = $3 ? $6 : $10; }
-			|	IF '(' expr ')' '{' operations '}'							{ $$ = $3 ? $6 : 0; }
 			;
 
 expr		:	expr '-' expr			{ $$ = $1 - $3; }
