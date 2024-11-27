@@ -25,10 +25,9 @@ extern int yylex();
 %left '*' '/'
 %right UMINUS
 
-%type <i> assign operations boolexp params
+%type <i> assign operations params
 
-%type <i> expr
-%type <f> float_expr
+%type <f> function main expr boolexp
 
 %%
 function    :   function ';'            									{ printf("Resultado da funcao = %f\n", $1); exit(0); }
@@ -40,37 +39,37 @@ main 		: FN MAIN '(' ')' '{' operations RETURN expr ';' '}' 			{ $$ = $8; }
 
 
 
-params		: param_list
-			|
+params		: param_list						{}
+			|									{}
 			;
 
-param_list	:	param 
-			|   param_list ',' param 
+param_list	:	param 							{}
+			|   param_list ',' param 			{}
 			;
 			
-param		:	ID ':' I64					
-			|	ID ':' F64							
-			|								
+param		:	ID ':' I64						{}	
+			|	ID ':' F64						{}		
+			|									{}							
 			;
 
 
 
-operations 	: operation operations
-           	| operation
+operations 	: operation operations				{}
+           	| operation							{}
            	;
 
-operation  	: assign
-           	| IF boolexp '{' operations '}'
-           	| IF boolexp '{' operations '}' ELSE '{' operations '}'
-           	| WHILE boolexp '{' operations '}'	
+operation  	: assign												{}
+           	| IF boolexp '{' operations '}'							{}
+           	| IF boolexp '{' operations '}' ELSE '{' operations '}'	{}
+           	| WHILE boolexp '{' operations '}'						{}
 			;
 
 
 
-assign		: 	VAR ID ':' I64 '=' expr ';'
-       		| 	VAR ID ':' F64 '=' expr ';'
-			| 	ID INC
-			| 	ID DEC
+assign		: 	VAR ID ':' I64 '=' expr ';'							{}
+       		| 	VAR ID ':' F64 '=' expr ';'							{}
+			| 	ID INC												{}
+			| 	ID DEC												{}
 			;
 
 
@@ -84,7 +83,7 @@ expr		:	expr '-' expr			{ $$ = $1 - $3; }
 			|	'-' expr 				{ $$ = -$2; }
 			|	INT						{ $$ = $1; }
 			|	FLOAT					{ $$ = $1; }
-			|	ID						{ $$ = $1; /* TODO: Como marcar os símbolos? */ }
+			|	ID						{ $$ = $1; }
 			;
 
 boolexp 	: expr '<' expr				{ $$ = $1 <  $3 ? 0 : 1; }
