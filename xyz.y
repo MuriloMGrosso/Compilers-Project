@@ -13,8 +13,8 @@ extern int yylex();
 
 %union {
     float f;
-	int i;
 }
+
 %token <f> NUM ID
 %token FN RETURN MAIN I64 F64 IF ELSE WHILE EQ NE GE LE AND OR INC DEC
 %type <f> function params operations assign expr 

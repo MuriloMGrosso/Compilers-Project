@@ -10,6 +10,7 @@ ws                          [ \t\r\n]+
 letter                      [A-Za-z_]
 digit                       [0-9]
 id                          {letter}({letter}|{digit})*
+num                         {digit}+(\.{digit}+)?
 
 %option noyywrap yylineno 
 %%
@@ -24,8 +25,7 @@ return                      { return RETURN;}
 i64                         { return I64;   }
 f64                         { return F64;   }
 {id}                        { return ID;    }
-{digit}+                    { yylval.i = atoll(yytext); return NUM;   }  
-{digit}*"."{digit}+         { yylval.f = atof(yytext);  return NUM;   } 
+{num}                       { yylval.f = atof(yytext); return NUM; }
 
 "if"                        { return IF;    }
 "else"                      { return ELSE;  }
