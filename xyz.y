@@ -17,7 +17,7 @@ extern int yylex();
 
 %token <f> NUM ID
 %token VAR FN RETURN MAIN I64 F64 IF ELSE WHILE EQ NE GE LE AND OR INC DEC
-%type <f> function params operations assign expr
+%type <f> function params operations assign expr statement
 
 %left '+' '-'
 %left '*' '/'
@@ -36,12 +36,17 @@ params		:	ID I64					{}
 			;
 
 operations	:	assign operations		{}
+			|   statement operations	{}
 			|							{}
 			;
 
 assign		:	ID '=' expr ';'				{ $1 = $3; }
 			| 	VAR ID ':' I64 '=' expr ';'	{ $2 = $6; }
 			| 	VAR ID ':' F64 '=' expr ';'	{ $2 = $6; }
+			;
+
+statement	:	IF '(' expr ')' '{' operations '}' ELSE '{' operations '}'	{ $$ = $3 ? $6 : $10; }
+			|	IF '(' expr ')' '{' operations '}'							{ $$ = $3 ? $6 : 0; }
 			;
 
 expr		:	expr '-' expr			{ $$ = $1 - $3; }

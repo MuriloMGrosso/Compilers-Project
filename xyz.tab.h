@@ -56,23 +56,24 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     NUM = 258,                     /* NUM  */
     ID = 259,                      /* ID  */
-    FN = 260,                      /* FN  */
-    RETURN = 261,                  /* RETURN  */
-    MAIN = 262,                    /* MAIN  */
-    I64 = 263,                     /* I64  */
-    F64 = 264,                     /* F64  */
-    IF = 265,                      /* IF  */
-    ELSE = 266,                    /* ELSE  */
-    WHILE = 267,                   /* WHILE  */
-    EQ = 268,                      /* EQ  */
-    NE = 269,                      /* NE  */
-    GE = 270,                      /* GE  */
-    LE = 271,                      /* LE  */
-    AND = 272,                     /* AND  */
-    OR = 273,                      /* OR  */
-    INC = 274,                     /* INC  */
-    DEC = 275,                     /* DEC  */
-    UMINUS = 276                   /* UMINUS  */
+    VAR = 260,                     /* VAR  */
+    FN = 261,                      /* FN  */
+    RETURN = 262,                  /* RETURN  */
+    MAIN = 263,                    /* MAIN  */
+    I64 = 264,                     /* I64  */
+    F64 = 265,                     /* F64  */
+    IF = 266,                      /* IF  */
+    ELSE = 267,                    /* ELSE  */
+    WHILE = 268,                   /* WHILE  */
+    EQ = 269,                      /* EQ  */
+    NE = 270,                      /* NE  */
+    GE = 271,                      /* GE  */
+    LE = 272,                      /* LE  */
+    AND = 273,                     /* AND  */
+    OR = 274,                      /* OR  */
+    INC = 275,                     /* INC  */
+    DEC = 276,                     /* DEC  */
+    UMINUS = 277                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -83,23 +84,24 @@ extern int yydebug;
 #define YYUNDEF 257
 #define NUM 258
 #define ID 259
-#define FN 260
-#define RETURN 261
-#define MAIN 262
-#define I64 263
-#define F64 264
-#define IF 265
-#define ELSE 266
-#define WHILE 267
-#define EQ 268
-#define NE 269
-#define GE 270
-#define LE 271
-#define AND 272
-#define OR 273
-#define INC 274
-#define DEC 275
-#define UMINUS 276
+#define VAR 260
+#define FN 261
+#define RETURN 262
+#define MAIN 263
+#define I64 264
+#define F64 265
+#define IF 266
+#define ELSE 267
+#define WHILE 268
+#define EQ 269
+#define NE 270
+#define GE 271
+#define LE 272
+#define AND 273
+#define OR 274
+#define INC 275
+#define DEC 276
+#define UMINUS 277
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -109,7 +111,7 @@ union YYSTYPE
 
     float f;
 
-#line 113 "xyz.tab.h"
+#line 115 "xyz.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
