@@ -16,8 +16,8 @@ extern int yylex();
 }
 
 %token <f> NUM ID
-%token FN RETURN MAIN I64 F64 IF ELSE WHILE EQ NE GE LE AND OR INC DEC
-%type <f> function params operations assign expr 
+%token VAR FN RETURN MAIN I64 F64 IF ELSE WHILE EQ NE GE LE AND OR INC DEC
+%type <f> function params operations assign expr
 
 %left '+' '-'
 %left '*' '/'
@@ -39,17 +39,31 @@ operations	:	assign operations		{}
 			|							{}
 			;
 
-assign		:	ID '=' expr ';'			{ $1 = $3; }
+assign		:	ID '=' expr ';'				{ $1 = $3; }
+			| 	VAR ID ':' I64 '=' expr ';'	{ $1 = $3; }
+			| 	VAR ID ':' F64 '=' expr ';'	{ $1 = $3; }
 			;
 
 expr		:	expr '-' expr			{ $$ = $1 - $3; }
 			|	expr '+' expr			{ $$ = $1 + $3; }
 			|	expr '*' expr			{ $$ = $1 * $3; }
 			|	expr '/' expr			{ $$ = $1 / $3; }
+			| 	'-' expr				{ $$ = -$2;}
 			|	'(' expr ')'			{ $$ = $2; }
 			|	NUM						{ $$ = $1; }
 			|	ID						{ $$ = $1; }
-			;
+			| 	expr '<' expr			{ $$ = $1 <  $3 ? 0. : 1.; }
+        	| 	expr '>' expr			{ $$ = $1 >  $3 ? 0. : 1.; }
+        	| 	expr LE expr			{ $$ = $1 <= $3 ? 0. : 1.; }
+        	| 	expr GE expr			{ $$ = $1 >= $3 ? 0. : 1.; }
+        	| 	expr EQ expr			{ $$ = $1 == $3 ? 0. : 1.; }
+        	| 	expr AND expr			{ $$ = $1 && $3 ? 0. : 1.; }
+        	| 	expr OR expr			{ $$ = $1 || $3 ? 0. : 1.; }
+        	| 	'!' expr				{ $$ = !$2 ? 0. : 1.; 	 }
+			| 	ID INC					{ $$ = $2 + 1; }
+			| 	ID DEC					{ $$ = $2 - 1; }
+        	;
+
 
 %%
 #include "xyz.yy.c"

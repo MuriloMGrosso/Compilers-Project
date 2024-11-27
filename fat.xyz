@@ -1,3 +1,4 @@
 fn sum(n f64) {
-    return 1;
+    a = 1;
+    return 1 + 1;
 };

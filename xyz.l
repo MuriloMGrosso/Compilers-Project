@@ -27,6 +27,7 @@ f64                         { return F64;   }
 {id}                        { return ID;    }
 {num}                       { yylval.f = atof(yytext); return NUM; }
 
+"var"                       { return VAR;   }
 "if"                        { return IF;    }
 "else"                      { return ELSE;  }
 "while"                     { return WHILE; }
@@ -41,5 +42,5 @@ f64                         { return F64;   }
 "++"                        { return INC;   }
 "--"                        { return DEC;   }
 
-[:+/\-*%(){};=,]             { return yytext[0]; }
+[:+/\-*%(){};=,]            { return yytext[0]; }
 %%
