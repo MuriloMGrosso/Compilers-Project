@@ -15,8 +15,12 @@ extern int yylex();
     float f;
 }
 %token <f> NUM ID
-%token I64 F64 FN RETURN WS
+%token FN RETURN VAR MAIN I64 F64 IF ELSE WHILE EQ NE GE LE AND OR INC DEC
 %type <f> function params operations assign expr var
+
+%left '+' '-'
+%left '*' '/'
+%right UMINUS
 
 %%
 function    :   function ';'            { printf("Resultado da funcao = %f\n", $1); exit(0); }
