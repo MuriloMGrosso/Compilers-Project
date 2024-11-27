@@ -93,7 +93,7 @@ boolexp 	: expr '<' expr				{ $$ = $1 <  $3 ? 0 : 1; }
         	| expr EQ expr				{ $$ = $1 == $3 ? 0 : 1; }
         	| boolexp AND boolexp		{ $$ = $1 && $3 ? 0 : 1; }
         	| boolexp OR boolexp		{ $$ = $1 || $3 ? 0 : 1; }
-        	| '!' boolexp				{ $$ = !$1 ? 0 : 1; }
+        	| '!' boolexp				{ $$ = !$2 ? 0 : 1; }
         	| '(' boolexp ')'			{ $$ = $2; }
         	| expr						{ $$ = $1 ? 0 : 1; }
         	;
