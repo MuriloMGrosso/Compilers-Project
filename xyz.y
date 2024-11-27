@@ -20,6 +20,7 @@ extern int setVar(const char *name, float value);
 %union {
     float f;
 	char s[100];
+	int flag = 1;
 }
 
 %token <f> NUM
@@ -48,8 +49,8 @@ operations	:	assign operations		{}
 			|							{}
 			;
 
-statement   :    IF expr '{' operations '}' ELSE '{' operations '}'    { $$ = $2 ? $4 : $8; }
-            |    IF expr '{' operations '}'                            { $$ = $2 ? $4 :  0; }
+statement   :    IF expr '{' operations '}' ELSE '{' operations '}'    { $$ = $2 ? if(flag == 1){$4; flag = 0;} : if(flag == 1){$8; flag = 0;} }
+            |    IF expr '{' operations '}'                            { $$ = $2 ? if(flag == 1){$4; flag = 0;} : if(flag == 1){0; flag = 0;}; }
             ;
 
 assign		:	ID '=' expr ';'				{ setVar($1, $3); }
