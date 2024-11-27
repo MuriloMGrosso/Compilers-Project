@@ -16,7 +16,7 @@ extern int yylex();
     float f;
 }
 
-%token FN RETURN VAR MAIN I64 F64 IF ELSE WHILE
+%token FN RETURN VAR MAIN I64 F64 IF ELSE WHILE EQ NE GE LE AND OR INC DEC
 
 %token <i> INT ID
 %token <f> FLOAT
