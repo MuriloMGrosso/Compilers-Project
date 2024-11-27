@@ -40,8 +40,8 @@ operations	:	assign operations		{}
 			;
 
 assign		:	ID '=' expr ';'				{ $1 = $3; }
-			| 	VAR ID ':' I64 '=' expr ';'	{ $1 = $3; }
-			| 	VAR ID ':' F64 '=' expr ';'	{ $1 = $3; }
+			| 	VAR ID ':' I64 '=' expr ';'	{ $2 = $6; }
+			| 	VAR ID ':' F64 '=' expr ';'	{ $2 = $6; }
 			;
 
 expr		:	expr '-' expr			{ $$ = $1 - $3; }
@@ -51,6 +51,8 @@ expr		:	expr '-' expr			{ $$ = $1 - $3; }
 			| 	'-' expr				{ $$ = -$2;}
 			|	'(' expr ')'			{ $$ = $2; }
 			|	NUM						{ $$ = $1; }
+			| 	ID INC					{ $$ = $1 + 1; }
+			| 	ID DEC					{ $$ = $1 - 1; }
 			|	ID						{ $$ = $1; }
 			| 	expr '<' expr			{ $$ = $1 <  $3 ? 0. : 1.; }
         	| 	expr '>' expr			{ $$ = $1 >  $3 ? 0. : 1.; }
@@ -60,8 +62,6 @@ expr		:	expr '-' expr			{ $$ = $1 - $3; }
         	| 	expr AND expr			{ $$ = $1 && $3 ? 0. : 1.; }
         	| 	expr OR expr			{ $$ = $1 || $3 ? 0. : 1.; }
         	| 	'!' expr				{ $$ = !$2 ? 0. : 1.; 	 }
-			| 	ID INC					{ $$ = $2 + 1; }
-			| 	ID DEC					{ $$ = $2 - 1; }
         	;
 
 
