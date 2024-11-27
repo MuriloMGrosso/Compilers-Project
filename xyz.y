@@ -19,10 +19,6 @@ extern int yylex();
 %token FN RETURN MAIN I64 F64 IF ELSE WHILE EQ NE GE LE AND OR INC DEC
 %type <f> function params operations assign expr 
 
-%left '+' '-'
-%left '*' '/'
-%right UMINUS
-
 %%
 function    :   function ';'            { printf("Resultado da funcao = %f\n", $1); exit(0); }
             ;
