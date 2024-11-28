@@ -385,12 +385,12 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[64] =
     {   0,
-        0,    0,   24,   23,    1,   22,   22,   23,   22,   22,
-       22,   13,   22,   22,   22,   12,   12,   12,   12,   12,
-       12,   12,   12,   23,    1,   15,   18,   20,   21,    2,
-        0,   13,   17,   14,   16,   12,   12,   12,    3,   12,
-        7,   12,   12,   12,   12,   19,    2,   13,   12,   11,
-       10,   12,   12,    6,   12,    8,    4,   12,   12,   12,
+        0,    0,   24,   23,    1,   20,   20,   23,   20,   20,
+       20,   21,   20,   20,   20,   22,   22,   22,   22,   22,
+       22,   22,   22,   23,    1,   13,   16,   18,   19,    2,
+        0,   21,   15,   12,   14,   22,   22,   22,    3,   22,
+        7,   22,   22,   22,   22,   17,    2,   21,   22,   11,
+       10,   22,   22,    6,   22,    8,    4,   22,   22,   22,
         9,    5,    0
     } ;
 
@@ -853,68 +853,68 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 29 "xyz.l"
+#line 28 "xyz.l"
 { return I64;   }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 30 "xyz.l"
+#line 29 "xyz.l"
 { return F64;   }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 31 "xyz.l"
-{ return ID;    }
+{ return EQ;    }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 32 "xyz.l"
-{ yylval.f = atof(yytext); return NUM; }
+{ return NE;    }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 34 "xyz.l"
-{ return EQ;    }
+#line 33 "xyz.l"
+{ return GE;    }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 35 "xyz.l"
-{ return NE;    }
+#line 34 "xyz.l"
+{ return LE;    }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 36 "xyz.l"
-{ return GE;    }
+#line 35 "xyz.l"
+{ return AND;   }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 37 "xyz.l"
-{ return LE;    }
+#line 36 "xyz.l"
+{ return OR;    }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 38 "xyz.l"
-{ return AND;   }
+{ return INC;   }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 39 "xyz.l"
-{ return OR;    }
+{ return DEC;   }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 41 "xyz.l"
-{ return INC;   }
+{ return yytext[0]; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 42 "xyz.l"
-{ return DEC;   }
+#line 43 "xyz.l"
+{ yylval.f = atof(yytext); return NUM; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 44 "xyz.l"
-{ return yytext[0]; }
+{ strcpy(yylval.s, yytext); return ID;    }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP

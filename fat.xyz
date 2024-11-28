@@ -1,5 +1,14 @@
 fn sum(n f64) {
-    var a : f64 = 1;
-    a++;
-    return a;
+    // Declaração de variáveis
+    var 
+        a : f64 = 1,
+        b : f64 = 2;
+    var c : i64;
+
+    // Operações
+    c = a * b;
+    c++;
+
+    // Retorno
+    return -c;
 };

@@ -25,11 +25,8 @@ var                         { return VAR;   }
 if                          { return IF;    }
 else                        { return ELSE;  }
 while                       { return WHILE; }
-
 i64                         { return I64;   }
 f64                         { return F64;   }
-{id}                        { return ID;    }
-{num}                       { yylval.f = atof(yytext); return NUM; }
 
 "=="                        { return EQ;    }
 "!="                        { return NE;    }
@@ -42,4 +39,7 @@ f64                         { return F64;   }
 "--"                        { return DEC;   }
 
 [:+/\-*%(){};<>!=,]         { return yytext[0]; }
+
+{num}                       { yylval.f = atof(yytext); return NUM; }
+{id}                        { strcpy(yylval.s, yytext); return ID;    }
 %%

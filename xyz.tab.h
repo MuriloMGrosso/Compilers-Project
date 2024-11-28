@@ -107,10 +107,10 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 20 "xyz.y"
+#line 23 "xyz.y"
 
     float f;
-	char s[100];
+	char s[MAX_VAR_NAME];
 
 #line 116 "xyz.tab.h"
 

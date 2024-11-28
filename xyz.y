@@ -3,23 +3,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define INT_TYPE 0
+#define FLOAT_TYPE 1
+#define MAX_VAR_NAME 100
+
 int yydebug = 1;
 
 extern int yylineno;
 
-extern int yyerror (char const *msg, ...);
+extern int yyerror(const char *msg, ...);
 extern int yylex();
 
-extern int isVarDeclared(const char* name);
-extern int addVar(const char *name, float value);
 extern float getVar(const char *name);
-extern int setVar(const char *name, float value);
+extern void setVar(const char *name, float value);
+extern void addVar(const char *name, int type);
 
 %}
 
 %union {
+	int i;
     float f;
-	char s[100];
+	char s[MAX_VAR_NAME];
 }
 
 %token <f> NUM
@@ -44,6 +48,7 @@ params		:	ID I64					{}
 			;
 
 operations	:	assign operations		{}
+			|	VAR declare operations		{}
 			|   statement operations	{}
 			|							{}
 			;
@@ -52,11 +57,19 @@ statement   :    IF expr '{' operations '}' ELSE '{' operations '}'    { $$ = $2
             |    IF expr '{' operations '}'                            { $$ = $2 ? $4 :  0; }
             ;
 
+declare		:	ID ':' I64 ',' declare				{ addVar($1, INT_TYPE); }
+			|	ID ':' F64 ',' declare				{ addVar($1, FLOAT_TYPE); }
+			| 	ID ':' I64 '=' expr ',' declare		{ addVar($1, INT_TYPE); setVar($1, $5); }
+			| 	ID ':' F64 '=' expr ',' declare		{ addVar($1, FLOAT_TYPE); setVar($1, $5); }
+			|	ID ':' I64 ';'						{ addVar($1, INT_TYPE); }
+			|	ID ':' F64 ';'						{ addVar($1, FLOAT_TYPE); }
+			| 	ID ':' I64 '=' expr ';'				{ addVar($1, INT_TYPE); setVar($1, $5); }
+			| 	ID ':' F64 '=' expr ';'				{ addVar($1, FLOAT_TYPE); setVar($1, $5); }
+			;
+
 assign		:	ID '=' expr ';'				{ setVar($1, $3); }
 			| 	ID INC ';'					{ setVar($1, getVar($1) + 1); }
 			| 	ID DEC ';'					{ setVar($1, getVar($1) - 1); }
-			| 	VAR ID ':' I64 '=' expr ';'	{ addVar($2, $6); }
-			| 	VAR ID ':' F64 '=' expr ';'	{ addVar($2, $6); }
 			;
 
 expr		:	expr '-' expr			{ $$ = $1 - $3; }
@@ -66,8 +79,6 @@ expr		:	expr '-' expr			{ $$ = $1 - $3; }
 			|	expr '%' expr			{ $$ = (int)$1 % (int)$3; }
 			| 	'-' expr				{ $$ = -$2;}
 			|	'(' expr ')'			{ $$ = $2; }
-			|	NUM						{ $$ = $1; }
-			|	ID						{ $$ = getVar($1); }
 			| 	expr '<' expr			{ $$ = $1 <  $3 ? 1. : 0.; }
         	| 	expr '>' expr			{ $$ = $1 >  $3 ? 1. : 0.; }
         	| 	expr LE expr			{ $$ = $1 <= $3 ? 1. : 0.; }
@@ -77,67 +88,79 @@ expr		:	expr '-' expr			{ $$ = $1 - $3; }
         	| 	expr AND expr			{ $$ = $1 && $3 ? 1. : 0.; }
         	| 	expr OR expr			{ $$ = $1 || $3 ? 1. : 0.; }
         	| 	'!' expr				{ $$ = $2 == 0. ? 1. : 0.; }
+			|	NUM						{ $$ = $1; }
+			|	ID						{ $$ = getVar($1); }
         	;
 
 
 %%
+
 #include "xyz.yy.c"
+#include <stdbool.h>
+
+#define INT_TYPE 0
+#define FLOAT_TYPE 1
 #define MAX_VARIABLES 100
+#define MAX_VAR_NAME 100
 
 typedef struct {
-    char name[100];
+	int type;
     float value;
+    char name[MAX_VAR_NAME];
 } Variable;
 
 int variableCount = 0;
 Variable variables[MAX_VARIABLES];
 
-int isVarDeclared(const char* name) {
-    for (int i = 0; i < variableCount; i++) {
-        if (strcmp(variables[i].name, name) == 0) {
-            return 1;
-        }
-    }
-    return 0;
-}
+int yyerror (char const *msg, ...);
+int yylex();
 
-int addVar(const char *name, float value) {
+float getVar(const char *name);
+bool isVarDeclared(const char* name);
+void setVar(const char *name, float value);
+void addVar(const char *name, int type);
+
+void addVar(const char *name, int type) {
 	if(variableCount > MAX_VARIABLES - 1) {
-		printf("Erro: tabela de simbolos cheia.\n");
-		return -1;
+		yyerror("Erro: tabela de variaveis cheia.\n");
+		return;
 	}
 
 	if(isVarDeclared(name)) {
-		printf("Erro: A variável '%s' já foi declarada.\n", name);
-			return -1;
+		yyerror("Erro: mais de uma declaração para a mesma variável.\n");
+		return;
 	}
 
 	strcpy(variables[variableCount].name, name);
-	variables[variableCount].value = value;
+	variables[variableCount].type = type;
 	variableCount++;
-	
-	return 0;
+}
+
+void setVar(const char *name, float value) {
+    for (int i = 0; i < variableCount; i++) {
+        if (strcmp(variables[i].name, name) == 0) {
+			variables[i].value = value;
+			return;
+        }
+    }
+	yyerror("Erro: variável não declarada.\n");
+}
+
+bool isVarDeclared(const char* name) {
+    for (int i = 0; i < variableCount; i++) {
+        if (strcmp(variables[i].name, name) == 0)
+            return true;
+    }
+    return false;
 }
 
 float getVar(const char *name) {
     for (int i = 0; i < variableCount; i++) {
-        if (strcmp(variables[i].name, name) == 0) {
-            return variables[i].value;
-        }
+        if (strcmp(variables[i].name, name) == 0)
+			return variables[i].value;
     }
-    printf("Erro: A variável '%s' não foi declarada.\n", name);
-    return -1;
-}
-
-int setVar(const char *name, float value) {
-    for (int i = 0; i < variableCount; i++) {
-        if (strcmp(variables[i].name, name) == 0) {
-			variables[i].value = value;
-            return 0;
-        }
-    }
-    printf("Erro: A variável '%s' não foi declarada.\n", name);
-    return -1;
+	yyerror("Erro: variável não declarada.\n");
+    return 0;
 }
 
 int yyerror(const char *msg, ...) {
