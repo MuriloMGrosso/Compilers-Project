@@ -56,10 +56,10 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     NUM = 258,                     /* NUM  */
     ID = 259,                      /* ID  */
-    VAR = 260,                     /* VAR  */
-    FN = 261,                      /* FN  */
-    RETURN = 262,                  /* RETURN  */
-    MAIN = 263,                    /* MAIN  */
+    MAIN = 260,                    /* MAIN  */
+    VAR = 261,                     /* VAR  */
+    FN = 262,                      /* FN  */
+    RETURN = 263,                  /* RETURN  */
     I64 = 264,                     /* I64  */
     F64 = 265,                     /* F64  */
     IF = 266,                      /* IF  */
@@ -84,10 +84,10 @@ extern int yydebug;
 #define YYUNDEF 257
 #define NUM 258
 #define ID 259
-#define VAR 260
-#define FN 261
-#define RETURN 262
-#define MAIN 263
+#define MAIN 260
+#define VAR 261
+#define FN 262
+#define RETURN 263
 #define I64 264
 #define F64 265
 #define IF 266
@@ -107,12 +107,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 23 "xyz.y"
+#line 25 "xyz.y"
 
+	int i;
     float f;
 	char s[MAX_VAR_NAME];
 
-#line 116 "xyz.tab.h"
+#line 117 "xyz.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

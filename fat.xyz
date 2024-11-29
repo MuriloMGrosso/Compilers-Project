@@ -1,14 +1,25 @@
-fn sum(n f64) {
-    // Declaração de variáveis
+fn fatorial(n i64) {
     var 
-        a : f64 = 1,
-        b : f64 = 2;
-    var c : i64;
+        i : i64 = 1,
+        r : i64 = 1;
 
-    // Operações
-    c = a * b;
-    c++;
+    if n < 0 {
+        //return -1;
+    }
 
-    // Retorno
-    return -c;
-};
+    while i < n + 1 {
+        r = r * i;
+        i++;
+    }
+    return r;
+}
+
+fn main () {
+    var
+        i : i64 = 3,
+        f : i64 = 0;
+
+    f = fatorial(1);
+
+    return 0;
+}

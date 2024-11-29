@@ -824,7 +824,7 @@ YY_RULE_SETUP
 case 4:
 YY_RULE_SETUP
 #line 22 "xyz.l"
-{ return MAIN;  }
+{ strcpy(yylval.s, yytext); return MAIN; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
@@ -914,7 +914,7 @@ YY_RULE_SETUP
 case 22:
 YY_RULE_SETUP
 #line 44 "xyz.l"
-{ strcpy(yylval.s, yytext); return ID;    }
+{ strcpy(yylval.s, yytext); return ID; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP

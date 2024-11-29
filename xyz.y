@@ -17,6 +17,8 @@ extern int yylex();
 extern float getVar(const char *name);
 extern void setVar(const char *name, float value);
 extern void addVar(const char *name, int type);
+extern void setScope(const char *scope);
+extern void printVarTable();
 
 %}
 
@@ -27,58 +29,70 @@ extern void addVar(const char *name, int type);
 }
 
 %token <f> NUM
-%token <s> ID
-%token VAR FN RETURN MAIN I64 F64 IF ELSE WHILE EQ NE GE LE AND OR INC DEC
-%type <f> function params operations assign expr statement
+%token <s> ID MAIN
+%token VAR FN RETURN I64 F64 IF ELSE WHILE EQ NE GE LE AND OR INC DEC
+%type <f> main function params statement declare assign return func_call branch loop expr call_params
 
 %left '+' '-'
 %left '*' '/'
 %right UMINUS
 
 %%
-function    :   function ';'            { printf("Resultado da funcao = %f\n", $1); exit(0); }
+main		: 	FN MAIN '(' ')' '{' statement return '}'		{ $$ = $7; setScope($2); printVarTable(); exit(0); }
+			|	function main									{ $$ = $2; }
+
+function    :   FN ID '(' params ')' '{' statement return '}'   { $$ = $8; setScope($2); }
             ;
 
-function    :   FN ID '(' params ')' '{' operations RETURN expr ';' '}'   { $$ = $9; }
-            ;
-
-params		:	ID I64					{}
-			|	ID F64					{}
-			|   params ',' params		{}
+params		:	ID I64						{ addVar($1, INT_TYPE  ); }
+			|	ID F64						{ addVar($1, FLOAT_TYPE); }
+			|	params ',' params			{}
+			|								{}
 			;
 
-operations	:	assign operations		{}
-			|	VAR declare operations		{}
-			|   statement operations	{}
-			|							{}
+statement	: 	VAR declare statement		{}
+			|	assign statement			{}
+			|	func_call ';' statement		{}
+			|	branch statement			{}
+			|	loop statement				{}
+			|								{}
 			;
 
-statement   :    IF expr '{' operations '}' ELSE '{' operations '}'    { $$ = $2 ? $4 : $8; }
-            |    IF expr '{' operations '}'                            { $$ = $2 ? $4 :  0; }
-            ;
-
-declare		:	ID ':' I64 ',' declare				{ addVar($1, INT_TYPE); }
-			|	ID ':' F64 ',' declare				{ addVar($1, FLOAT_TYPE); }
-			| 	ID ':' I64 '=' expr ',' declare		{ addVar($1, INT_TYPE); setVar($1, $5); }
+declare		: 	ID ':' I64 '=' expr ',' declare		{ addVar($1, INT_TYPE  ); setVar($1, $5); }
 			| 	ID ':' F64 '=' expr ',' declare		{ addVar($1, FLOAT_TYPE); setVar($1, $5); }
-			|	ID ':' I64 ';'						{ addVar($1, INT_TYPE); }
-			|	ID ':' F64 ';'						{ addVar($1, FLOAT_TYPE); }
-			| 	ID ':' I64 '=' expr ';'				{ addVar($1, INT_TYPE); setVar($1, $5); }
+			| 	ID ':' I64 '=' expr ';'				{ addVar($1, INT_TYPE  ); setVar($1, $5); }
 			| 	ID ':' F64 '=' expr ';'				{ addVar($1, FLOAT_TYPE); setVar($1, $5); }
 			;
 
-assign		:	ID '=' expr ';'				{ setVar($1, $3); }
+assign		:	ID '=' expr ';'				{ setVar($1, $3); 			  }
 			| 	ID INC ';'					{ setVar($1, getVar($1) + 1); }
 			| 	ID DEC ';'					{ setVar($1, getVar($1) - 1); }
 			;
 
-expr		:	expr '-' expr			{ $$ = $1 - $3; }
-			|	expr '+' expr			{ $$ = $1 + $3; }
-			|	expr '*' expr			{ $$ = $1 * $3; }
-			|	expr '/' expr			{ $$ = $1 / $3; }
-			|	expr '%' expr			{ $$ = (int)$1 % (int)$3; }
-			| 	'-' expr				{ $$ = -$2;}
-			|	'(' expr ')'			{ $$ = $2; }
+return		:	RETURN expr ';'				{ $$ = $2; }
+			;
+
+func_call	:	ID '(' call_params ')'		{}
+			;
+
+call_params	:	expr								{ $$ = $1; }
+			|	call_params ',' call_params			{}
+			;
+
+branch   	:   IF expr '{' statement '}' ELSE '{' statement '}'  {}
+            |   IF expr '{' statement '}'                         {}
+            ;
+
+loop		:	WHILE expr '{' statement '}'					  {}
+			;
+
+expr		:	expr '-' expr			{ $$ = $1 - $3; 		   }
+			|	expr '+' expr			{ $$ = $1 + $3; 		   }
+			|	expr '*' expr			{ $$ = $1 * $3; 		   }
+			|	expr '/' expr			{ $$ = $1 / $3; 		   }
+			|	expr '%' expr			{ $$ = (int)$1 % (int)$3;  }
+			| 	'-' expr				{ $$ = -$2;				   }
+			|	'(' expr ')'			{ $$ = $2; 				   }
 			| 	expr '<' expr			{ $$ = $1 <  $3 ? 1. : 0.; }
         	| 	expr '>' expr			{ $$ = $1 >  $3 ? 1. : 0.; }
         	| 	expr LE expr			{ $$ = $1 <= $3 ? 1. : 0.; }
@@ -88,8 +102,9 @@ expr		:	expr '-' expr			{ $$ = $1 - $3; }
         	| 	expr AND expr			{ $$ = $1 && $3 ? 1. : 0.; }
         	| 	expr OR expr			{ $$ = $1 || $3 ? 1. : 0.; }
         	| 	'!' expr				{ $$ = $2 == 0. ? 1. : 0.; }
-			|	NUM						{ $$ = $1; }
-			|	ID						{ $$ = getVar($1); }
+			|	NUM						{ $$ = $1; 				   }
+			|	ID						{ $$ = getVar($1); 		   }
+			|	func_call				{ $$ = $1;				   }
         	;
 
 
@@ -110,6 +125,7 @@ typedef struct {
 } Variable;
 
 int variableCount = 0;
+int lastScopeDefined = -1;
 Variable variables[MAX_VARIABLES];
 
 int yyerror (char const *msg, ...);
@@ -119,8 +135,11 @@ float getVar(const char *name);
 bool isVarDeclared(const char* name);
 void setVar(const char *name, float value);
 void addVar(const char *name, int type);
+void setScope(const char *scope);
 
 void addVar(const char *name, int type) {
+	char fullName[MAX_VAR_NAME];
+
 	if(variableCount > MAX_VARIABLES - 1) {
 		yyerror("Erro: tabela de variaveis cheia.\n");
 		return;
@@ -163,6 +182,26 @@ float getVar(const char *name) {
     return 0;
 }
 
+void setScope(const char *scope) {
+	char fullName[MAX_VAR_NAME];
+
+    for (int i = lastScopeDefined + 1; i < variableCount; i++) {
+		strcpy(fullName, scope);
+		strcat(fullName, ".");
+		strcat(fullName, variables[i].name);
+		strcpy(variables[i].name, fullName);
+		lastScopeDefined = i;
+    }
+}
+
+void printVarTable() {
+	printf("\nTabela de símbolos:\n\n");
+	for(int i = 0; i < variableCount; i++) {
+		printf("%s [%s]\n", variables[i].name, variables[i].type == INT_TYPE ? "i64" : "f64");
+	}
+	printf("\n");
+}
+
 int yyerror(const char *msg, ...) {
 	va_list args;
 
@@ -181,5 +220,5 @@ int main (int argc, char **argv) {
         }
     }
 
-    return  yyparse();
+    return yyparse();
 }

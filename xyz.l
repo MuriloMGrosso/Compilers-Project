@@ -19,7 +19,7 @@ num                         {digit}+(\.{digit}+)?
 "//".*                      { }
 
 fn                          { return FN;    }
-main                        { return MAIN;  }
+main                        { strcpy(yylval.s, yytext); return MAIN; }
 return                      { return RETURN;}
 var                         { return VAR;   }
 if                          { return IF;    }
@@ -41,5 +41,5 @@ f64                         { return F64;   }
 [:+/\-*%(){};<>!=,]         { return yytext[0]; }
 
 {num}                       { yylval.f = atof(yytext); return NUM; }
-{id}                        { strcpy(yylval.s, yytext); return ID;    }
+{id}                        { strcpy(yylval.s, yytext); return ID; }
 %%
