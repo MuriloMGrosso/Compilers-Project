@@ -19,6 +19,8 @@ extern void setVar(const char *name, float value);
 extern void addVar(const char *name, int type);
 extern void setScope(const char *scope);
 extern void printVarTable();
+extern void incReturnCount();
+extern void checkFuncReturn();
 
 %}
 
@@ -38,10 +40,10 @@ extern void printVarTable();
 %right UMINUS
 
 %%
-main		: 	FN MAIN '(' ')' '{' statement return '}'		{ $$ = $7; setScope($2); printVarTable(); exit(0); }
+main		: 	FN MAIN '(' ')' '{' statement '}'				{ $$ = $6; setScope($2); checkFuncReturn(); printVarTable(); exit(0); }
 			|	function main									{ $$ = $2; }
 
-function    :   FN ID '(' params ')' '{' statement return '}'   { $$ = $8; setScope($2); }
+function    :   FN ID '(' params ')' '{' statement '}'   { $$ = $7; setScope($2); checkFuncReturn(); }
             ;
 
 params		:	ID I64						{ addVar($1, INT_TYPE  ); }
@@ -50,11 +52,12 @@ params		:	ID I64						{ addVar($1, INT_TYPE  ); }
 			|								{}
 			;
 
-statement	: 	VAR declare statement		{}
+statement	: 	VAR declare statement 		{}
 			|	assign statement			{}
 			|	func_call ';' statement		{}
 			|	branch statement			{}
 			|	loop statement				{}
+			|	return statement			{ $$ = $1; incReturnCount(); }
 			|								{}
 			;
 
@@ -126,6 +129,7 @@ typedef struct {
 
 int variableCount = 0;
 int lastScopeDefined = -1;
+int returnCount = 0;
 Variable variables[MAX_VARIABLES];
 
 int yyerror (char const *msg, ...);
@@ -136,6 +140,8 @@ bool isVarDeclared(const char* name);
 void setVar(const char *name, float value);
 void addVar(const char *name, int type);
 void setScope(const char *scope);
+void incReturnCount();
+void checkFuncReturn();
 
 void addVar(const char *name, int type) {
 	char fullName[MAX_VAR_NAME];
@@ -200,6 +206,19 @@ void printVarTable() {
 		printf("%s [%s]\n", variables[i].name, variables[i].type == INT_TYPE ? "i64" : "f64");
 	}
 	printf("\n");
+}
+
+void incReturnCount() {
+	returnCount++;
+}
+
+void checkFuncReturn() {
+	if(returnCount < 1) {
+		yyerror("Erro: função sem retorno.\n");
+		return;
+	}
+
+	returnCount = 0;
 }
 
 int yyerror(const char *msg, ...) {

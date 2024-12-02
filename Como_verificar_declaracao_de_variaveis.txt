@@ -1,0 +1,16 @@
+4)
+
+Em nosso programa, as variáveis são representadas por um struct. Cada struct
+armazena o nome, tipo e valor da variável.
+
+Ao declarar uma variável, esta é armazenada em um array (ou tabela de símbolos).
+Note que o nome de cada variável contém como prefixo o nome da função em que foi
+definida.
+
+A implementação atual desse array de variáveis permite a verificação em tempo
+de compilação da declaração prévia de variáveis, assim conferindo ao parser
+desenvolvido a capacidade de averiguar se variáveis foram declaradas anteriormente
+ao seu uso.
+
+Em outras palavras, basta averiguar se há alguma variável com este nome já armazenada
+na tabela. Se há, então a variável já foi declarada.

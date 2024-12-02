@@ -9,7 +9,7 @@ extern int yyerror (char const *msg, ...);
 ws                          [ \t\r\n]+
 letter                      [A-Za-z_]
 digit                       [0-9]
-id                          {letter}({letter}|{digit})*
+id                          [A-Za-z]{letter}*
 num                         {digit}+(\.{digit}+)?
 
 %option noyywrap yylineno 
